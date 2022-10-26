@@ -9,9 +9,8 @@ import numpy as np
 from matplotlib.widgets import Slider
 
 theta = np.linspace(0, 2 * np.pi, 150)
-radius = 1
 planet_orbit_in_au = 1
-star_semi_major_axis_solar_radii = 100
+star_semi_major_axis_solar_radii = 10
 star_mass_in_solar_masses = 0.85
 
 # Alright, math time
@@ -20,6 +19,7 @@ G = 6.6743e-11
 solar_mass = star_mass_in_solar_masses * 1.989e+30
 orbital_period_s = 2 * np.pi * np.sqrt((semi_major_axis_m ** 3) / (G * 2 * solar_mass))
 orbital_period = orbital_period_s / 86400
+solar_orbit_rad_au = star_semi_major_axis_solar_radii / 2 / 215.032
 
 
 def circle(radius, pos_rads):
@@ -54,15 +54,15 @@ planet_diagram.xaxis.set_ticks_position('bottom')
 planet_diagram.yaxis.set_ticks_position('left')
 planet_diagram.set_aspect(1)
 
-planet_diagram.plot(*circle(radius, theta), linewidth=1)
+planet_diagram.plot(*circle(solar_orbit_rad_au, theta), linewidth=1)
 
 # Plot suns
-planet_diagram.plot(*circle(1, 0), marker="o", markersize=15, markerfacecolor="green")
-planet_diagram.plot(*circle(1, np.pi), marker="o", markersize=15, markerfacecolor="green")
+planet_diagram.plot(*circle(solar_orbit_rad_au, 0), marker="o", markersize=15, markerfacecolor="green")
+planet_diagram.plot(*circle(solar_orbit_rad_au, np.pi), marker="o", markersize=15, markerfacecolor="green")
 
 # Plot planet and planet orbit
-planet_diagram.plot(*circle(3, theta), linewidth=1)
-planet_diagram.plot(*circle(3, np.pi / 2), marker="o", markersize=10, markerfacecolor="blue")
+planet_diagram.plot(*circle(planet_orbit_in_au, theta), linewidth=1)
+planet_diagram.plot(*circle(planet_orbit_in_au, np.pi / 2), marker="o", markersize=10, markerfacecolor="blue")
 planet_diagram.set_title("Solar system diagram")
 
 
@@ -94,7 +94,7 @@ def map_num_to_rads(num, max=365, max_val=2 * np.pi):
 
 
 x_max = 365
-x_lim =365
+x_lim = 365
 year_scale = np.linspace(0, x_max, 10000)  # 365, 1000)
 sun_points_1 = sun_1(map_num_to_rads(year_scale))
 plan_points = planet(map_num_to_rads(year_scale))
