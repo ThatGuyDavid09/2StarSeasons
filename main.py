@@ -8,10 +8,10 @@ planet_orbit_in_au = 1
 star_semi_major_axis_solar_radii = 10
 star_mass_in_solar_masses = 0.85
 axial_tilt = 23.5
-
-# All based on this: https://worldbuilding.stackexchange.com/questions/62948/season-cycle-that-would-occur-on-a-habitable-planet-that-orbits-two-suns
 planet_mass_in_earth_masses = 1
 
+
+# All based on this: https://worldbuilding.stackexchange.com/questions/62948/season-cycle-that-would-occur-on-a-habitable-planet-that-orbits-two-suns
 # Alright, math time
 semi_major_axis_m = star_semi_major_axis_solar_radii * 6.957e+8  # Convert solar radius to meters
 planet_orbit_m = planet_orbit_in_au * 1.496e+11  # Convert AU to meters
