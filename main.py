@@ -1,17 +1,15 @@
-import math
-
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
-# import matplotlib as mpl
-# mpl.rcParams['axes.formatter.useoffset'] = False
 
 import numpy as np
-from matplotlib.widgets import Slider
 
-theta = np.linspace(0, 2 * np.pi, 150)
+# Change these
 planet_orbit_in_au = 1
 star_semi_major_axis_solar_radii = 10
 star_mass_in_solar_masses = 0.85
+axial_tilt = 23.5
+
+# All based on this: https://worldbuilding.stackexchange.com/questions/62948/season-cycle-that-would-occur-on-a-habitable-planet-that-orbits-two-suns
 planet_mass_in_earth_masses = 1
 
 # Alright, math time
@@ -34,27 +32,13 @@ def circle(radius, pos_rads):
     return a, b
 
 
-#
-# def circle_inv(radius, pos_rads):
-#     a = radius * np.cos(pos_rads)
-#     b = radius * np.sin(pos_rads)
-#     return -a, -b
-
-
-# 100 linearly spaced numbers
-# spacing = np.linspace(0,360,100)
-
-# y = np.sin(np.radians(x))
 fig, ax = plt.subplots(2, 2)
-# ax = fig.add_subplot(1)
-# ax.spines['left'].set_position('left')
-# ax.spines['bottom'].set_position('bottom')
-# ax.spines['right'].set_color('none')
-# ax.spines['top'].set_color('none')
 planet_diagram = ax[0, 0]
 dist_diagram = ax[0, 1]
 energy_diagram = ax[1, 0]
 seasons_diagram = ax[1, 1]
+
+theta = np.linspace(0, 2 * np.pi, 150)
 
 planet_diagram.xaxis.set_ticks_position('bottom')
 planet_diagram.yaxis.set_ticks_position('left')
@@ -130,11 +114,10 @@ energy_diagram.set_xlim([0, x_lim])
 
 
 # Assume that planet is at max axial tilt at 0 radians
-# Also assume 23.5 axial tilt, like earth
 def northern_energy(energy_recv, pos_num, north_degrees=45):
     pos_rads = map_num_to_rads(pos_num)
-    mapping_1 = interp1d([0, np.pi], [np.radians(-23.5), np.radians(23.5)])
-    mapping_2 = interp1d([0, np.pi], [np.radians(23.5), np.radians(-23.5)])
+    mapping_1 = interp1d([0, np.pi], [np.radians(-axial_tilt), np.radians(axial_tilt)])
+    mapping_2 = interp1d([0, np.pi], [np.radians(axial_tilt), np.radians(-axial_tilt)])
     rad_positions = np.where(pos_rads < np.pi, mapping_1(pos_rads % np.pi), mapping_2(pos_rads % np.pi))
     modifiers = np.cos(np.radians(north_degrees) + rad_positions)
     return modifiers * energy_recv
