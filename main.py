@@ -12,15 +12,21 @@ theta = np.linspace(0, 2 * np.pi, 150)
 planet_orbit_in_au = 1
 star_semi_major_axis_solar_radii = 10
 star_mass_in_solar_masses = 0.85
+planet_mass_in_earth_masses = 1
 
 # Alright, math time
 semi_major_axis_m = star_semi_major_axis_solar_radii * 6.957e+8  # Convert solar radius to meters
+planet_orbit_m = planet_orbit_in_au * 1.496e+11  # Convert AU to meters
 G = 6.6743e-11
 solar_mass = star_mass_in_solar_masses * 1.989e+30
+planet_mass = planet_mass_in_earth_masses * 5.972e+24
+
 orbital_period_s = 2 * np.pi * np.sqrt((semi_major_axis_m ** 3) / (G * 2 * solar_mass))
 orbital_period = orbital_period_s / 86400
 solar_orbit_rad_au = star_semi_major_axis_solar_radii / 2 / 215.032
 
+planet_orbital_period_s = 2 * np.pi * np.sqrt((planet_orbit_m ** 3) / (G * (2 * solar_mass + planet_mass)))
+planet_orbital_period = planet_orbital_period_s / 86400
 
 def circle(radius, pos_rads):
     a = radius * np.cos(pos_rads)
@@ -68,15 +74,15 @@ planet_diagram.set_title("Solar system diagram")
 
 def sun_1(pos_rads):
     orbit_rad = semi_major_axis_m / 2
-    a = orbit_rad * np.cos((365 / orbital_period) * pos_rads)
-    b = orbit_rad * np.sin((365 / orbital_period) * pos_rads)
+    a = orbit_rad * np.cos((planet_orbital_period / orbital_period) * pos_rads)
+    b = orbit_rad * np.sin((planet_orbital_period / orbital_period) * pos_rads)
     return np.vstack((a, b))
 
 
 def sun_2(pos_rads):
     orbit_rad = semi_major_axis_m / 2
-    a = orbit_rad * np.cos((365 / orbital_period) * pos_rads)
-    b = orbit_rad * np.sin((365 / orbital_period) * pos_rads)
+    a = orbit_rad * np.cos((planet_orbital_period / orbital_period) * pos_rads)
+    b = orbit_rad * np.sin((planet_orbital_period / orbital_period) * pos_rads)
     return np.vstack((-a, -b))
 
 
@@ -87,14 +93,14 @@ def planet(pos_rads):
     return np.vstack((a, b))
 
 
-def map_num_to_rads(num, max=365, max_val=2 * np.pi):
+def map_num_to_rads(num, max=planet_orbital_period, max_val=2 * np.pi):
     MAX_RADS = max_val
     scaled_val = (num / max) % 10
     return MAX_RADS * scaled_val
 
 
-x_max = 365
-x_lim = 365
+x_max = planet_orbital_period
+x_lim = x_max
 year_scale = np.linspace(0, x_max, 10000)  # 365, 1000)
 sun_points_1 = sun_1(map_num_to_rads(year_scale))
 plan_points = planet(map_num_to_rads(year_scale))
