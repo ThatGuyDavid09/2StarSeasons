@@ -7,6 +7,8 @@ import numpy as np
 planet_orbit_in_au = 1
 star_semi_major_axis_solar_radii = 10
 star_mass_in_solar_masses = 0.85
+sun1_luminosity = 1
+sun2_luminosity = 1
 axial_tilt = 23.5
 planet_mass_in_earth_masses = 1
 
@@ -24,7 +26,7 @@ orbital_period = orbital_period_s / 86400
 solar_orbit_rad_au = star_semi_major_axis_solar_radii / 2 / 215.032
 
 planet_orbital_period_s = 2 * np.pi * np.sqrt((planet_orbit_m ** 3) / (G * (2 * solar_mass + planet_mass)))
-planet_orbital_period = planet_orbital_period_s / 86400
+planet_orbital_period = planet_orbital_period_s / 86400 # Days
 
 def circle(radius, pos_rads):
     a = radius * np.cos(pos_rads)
@@ -103,7 +105,7 @@ dist_diagram.set_xlim([0, x_lim])
 # Formula from https://worldbuilding.stackexchange.com/questions/87137/how-to-calculate-the-light-received-by-a-planet-during-a-binary-star-eclipse
 def solar_energy(dist_to_sun1, dist_to_sun2):
     ang_diff = (dist_to_sun1 / dist_to_sun2) - 1
-    total_b = (1 / (dist_to_sun1 ** 2)) + ang_diff * (1 / (dist_to_sun2 ** 2))
+    total_b = (sun1_luminosity / (dist_to_sun1 ** 2)) + ang_diff * (sun2_luminosity / (dist_to_sun2 ** 2))
     return total_b
 
 
@@ -126,7 +128,7 @@ def northern_energy(energy_recv, pos_num, north_degrees=45):
 energy_vals = northern_energy(solar_vals, year_scale)
 seasons_diagram.plot(year_scale, energy_vals, color="black")
 seasons_diagram.set_title("Energy received at 45N")
-seasons_diagram.set_xlim([0, x_lim])
+# seasons_diagram.set_xlim([0, x_lim])
 
 # show the plot
 plt.show()
